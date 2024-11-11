@@ -121,6 +121,11 @@ namespace MovieTheatreApp
                     Valid = dv.DataValueValidation(index, 0, 6);
                     if (Valid)
                     {
+                        Valid = dv.AgeValidation(age, movies[index].Rating);
+                    }
+                    
+                    if (Valid)
+                    {
                         Valid = dv.Confirmation($"is {movies[index].title} your desired choice?");
                     }
                 } //End of movie selection loop
@@ -316,7 +321,7 @@ namespace MovieTheatreApp
                     isValid = false;
                 }
             }
-            return idx;
+            reConfirmChoice()turn idx;
         }//end of int validation method
         public bool DataValueValidation(int value, int min, int max) //Method for validating the value
         {
@@ -340,6 +345,52 @@ namespace MovieTheatreApp
             }
             else { return false; }
         }
+        
+        public bool AgeValidation(int a, Rating rating) //Method for checking the age and rating
+        {
+            switch (rating)
+        {
+        case Rating.G:
+            return true; 
+
+        case Rating.PG:
+            if (age < 13)
+            {
+                Console.WriteLine("Warning: This movie may contain content unsuitable for children under 13. Please verify your choice.");
+                return Confirmation("");
+            }
+            return true;
+
+        case Rating.PG13:
+            if (age < 13)
+            {
+                Console.WriteLine("You must be at least 13 years old to view this movie.");
+                return false;
+            }
+            return true;
+
+        case Rating.R:
+            if (age < 17)
+            {
+                Console.WriteLine("You must be at least 13 to view this movie. If you're under 17, confirm your choice.");
+                return age >= 13 && Confirmation("");
+            }
+            return true;
+
+        case Rating.N17:
+            if (age < 17)
+            {
+                Console.WriteLine("You must be at least 17 to view this movie.");
+                return false;
+            }
+            return true;
+
+        default:
+            Console.Writeline("Error reading customers age and rating");
+            return false; 
+        }
+
+        }//End of rating validation method
 
 
     }
